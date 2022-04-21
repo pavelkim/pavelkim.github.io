@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en" class="h-100">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <title>What's my IP?</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha256-cMPWkL3FzjuaFSfEYESYmjF25hCIL6mfRSPnW8OVvM4=" crossorigin="anonymous"></script>
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+    </style>
+
+  </head>
+  <body class="d-flex h-100 text-center text-white bg-dark">
+
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+      <div class="d-flex align-items-center flex-column justify-content-center h-100 bg-dark text-white" id="header">
+
+        <h2 id="result_caption" class="collapse">
+          &nbsp;
+        </h2>
+
+        <button id="button" class="btn btn-primary w-25" type="button" data-bs-toggle="collapse" data-bs-target="#result_caption" aria-expanded="false" aria-controls="result_caption">
+          <div id="button_throbber" class="text-center collapse">
+            <div class="spinner-border spinner-border-sm" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+          <span id="button_caption">What's my IP?</span>
+        </button>
+      </div>
+      <footer class="mt-auto text-white-50">
+        <p>here: <a href="https://ipaddr.pl/" target="_blank" class="text-white">ipaddr.pl</a></p>
+      </footer>
+    </div>
+
+    <script type="text/javascript">
+
+      $("#button").click(function() {
+        console.log("Button pressed.");
+
+          $("#button_caption").hide();
+          $("#button_throbber").show();
+          $("#button").attr('disabled', 'true');
+
+        $.get( "https://ipaddr.pl/", function(data) {
+          console.log("Request succeeded: " + JSON.stringify(data));
+        })
+
+        .done(function(data, textStatus, jqXHR) {
+          console.log("Request done: " + JSON.stringify(data) + " " + JSON.stringify(textStatus) + " " + JSON.stringify(jqXHR));
+          $("#result_caption").html(data);
+          $("#button_throbber").hide();
+          $("#button").removeAttr('disabled');
+          $("#button_caption").html("Again!");
+          $("#button_caption").show();
+          $("#button").removeAttr("data-bs-target");
+        })
+
+        .fail(function(data, textStatus) {
+          console.log("Request failed: " + JSON.stringify(data) + " " + JSON.stringify(textStatus));
+
+          $("#result_caption").html("Error");
+          $("#button_throbber").hide();
+          $("#button").removeAttr('disabled');
+          $("#button_caption").html("Try again..");
+          $("#button_caption").show();
+
+        })
+
+        .always(function(data) {
+          console.log("Request function always: " + JSON.stringify(data));
+        });
+
+      });
+    </script>
+    
+  </body>
+</html>
